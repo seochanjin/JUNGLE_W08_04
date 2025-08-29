@@ -1,0 +1,12 @@
+echo 테스트 파일
+echo 서버를 실행 후 다른 터미널에서 echo 클라이언트를 실행
+
+실행 방법 예)
+./echoserver 12345
+
+다른 터미널로 이동
+
+./echoclient localhost 12345
+
+종료는 클라이언트에서는 cntl + d
+서버는 cntl + c
