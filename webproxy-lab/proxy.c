@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "csapp.h"
 /* Recommended max cache and object sizes */
-//sed -i 's/\r$//' driver.sh  (윈도우는 적용해야함)
 #define MAX_CACHE_SIZE 1049000
 #define MAX_OBJECT_SIZE 102400
+//sed -i 's/\r$//' driver.sh  (윈도우는 적용해야함)
 
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr =
@@ -20,7 +20,7 @@ static const char *user_agent_hdr =
 void doit(int fd);
 void read_requesthdrs(rio_t *rp);
 
-void serve_static(int fd, char *filename, int filesize, char *method);
+
 void get_filetype(char *filename, char *filetype);
 
 void clienterror(int fd, char *cause, char *errnum, char *shortmsg,
@@ -55,9 +55,7 @@ int main(int argc, char **argv){
 void doit(int fd){
   char webname[MAXLINE], typename[MAXLINE], portnum[MAXLINE];
 
-  struct stat sbuf;
   char buf[MAXLINE], method[MAXLINE], uri[MAXLINE], version[MAXLINE];
-  char filename[MAXLINE], cgiargs[MAXLINE];
   rio_t rio;
   size_t n;
   // 클라이언트 요청 라인 읽기
@@ -95,7 +93,6 @@ void doit(int fd){
 
 void getheader(int serverfd, char *webname, char *portnum , char * typename){
   char buf[MAXLINE];
-
   sprintf(buf, "GET %s HTTP/1.0\r\n", typename);
   rio_writen(serverfd, buf, strlen(buf));
   sprintf(buf, "Host: %s \r\n", webname);
@@ -178,38 +175,38 @@ void read_requesthdrs(rio_t *rp){
   return;
 }
 
-void serve_static(int fd , char *filename, int filesize, char *method){
-  int srcfd;
-  char *srcp, filetype[MAXLINE], buf[MAXBUF];
-  get_filetype(filename, filetype);
-  sprintf(buf, "HTTP/1.0 200 OK\r\n");
-  sprintf(buf, "%sServer : Proxy Web Server(What is this)\r\n", buf);
-  sprintf(buf, "%sConnection: close\r\n", buf);
-  sprintf(buf, "%sContent-length: %d\r\n", buf, filesize);
-  sprintf(buf, "%sContent-type: %s\r\n\r\n", buf, filetype);
-  Rio_writen(fd, buf, strlen(buf)); //위의 내용을 한꺼번에 fd에 보냄 
-  printf("Response headers:\n");
-  printf("%s", buf);
+// void serve_static(int fd , char *filename, int filesize, char *method){
+//   int srcfd;
+//   char *srcp, filetype[MAXLINE], buf[MAXBUF];
+//   get_filetype(filename, filetype);
+//   sprintf(buf, "HTTP/1.0 200 OK\r\n");
+//   sprintf(buf, "%sServer : Proxy Web Server(What is this)\r\n", buf);
+//   sprintf(buf, "%sConnection: close\r\n", buf);
+//   sprintf(buf, "%sContent-length: %d\r\n", buf, filesize);
+//   sprintf(buf, "%sContent-type: %s\r\n\r\n", buf, filetype);
+//   Rio_writen(fd, buf, strlen(buf)); //위의 내용을 한꺼번에 fd에 보냄 
+//   printf("Response headers:\n");
+//   printf("%s", buf);
 
-  if(strcasecmp(method,"GET") == 0){
-    srcfd = Open(filename,O_RDONLY,0);
-    srcp = Mmap(0,filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
-    Close(srcfd);
-    Rio_writen(fd,srcp, filesize);
-    Munmap(srcp, filesize);
-  }
-}
+//   if(strcasecmp(method,"GET") == 0){
+//     srcfd = Open(filename,O_RDONLY,0);
+//     srcp = Mmap(0,filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
+//     Close(srcfd);
+//     Rio_writen(fd,srcp, filesize);
+//     Munmap(srcp, filesize);
+//   }
+// }
 
-void get_filetype(char *filename, char *filetype)
-{
-  if (strstr(filename, ".html"))
-    strcpy(filetype, "text/html");
-  else if (strstr(filename, ".gif"))
-    strcpy(filetype, "image/gif");
-  else if (strstr(filename, ".png"))
-    strcpy(filetype, "image/png");
-  else if (strstr(filename, ".jpg"))
-    strcpy(filetype, "image/jpeg");
-  else
-    strcpy(filetype, "text/plain");
-}
+// void get_filetype(char *filename, char *filetype)
+// {
+//   if (strstr(filename, ".html"))
+//     strcpy(filetype, "text/html");
+//   else if (strstr(filename, ".gif"))
+//     strcpy(filetype, "image/gif");
+//   else if (strstr(filename, ".png"))
+//     strcpy(filetype, "image/png");
+//   else if (strstr(filename, ".jpg"))
+//     strcpy(filetype, "image/jpeg");
+//   else
+//     strcpy(filetype, "text/plain");
+// }
